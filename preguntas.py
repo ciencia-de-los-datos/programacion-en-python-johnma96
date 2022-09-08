@@ -13,6 +13,15 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 """
 
 
+def load_data(name_file):
+    with open(name_file, "r") as file:
+        data = file.readlines()
+
+    data = [line.replace("\n", "") for line in data]
+    data = [line.split("\t") for line in data]
+    return data
+
+
 def pregunta_01():
     """
     Retorne la suma de la segunda columna.
@@ -21,7 +30,13 @@ def pregunta_01():
     214
 
     """
-    return
+    data = load_data("data.csv")
+
+    val = 0
+    for line in data:
+        val += int(line[1])
+    val
+    return val
 
 
 def pregunta_02():
@@ -39,7 +54,16 @@ def pregunta_02():
     ]
 
     """
-    return
+    data = load_data("data.csv")
+
+    letters = sorted(list(set([line[0] for line in data])))
+    dict_count = {letter: 0 for letter in letters}
+    for line in data:
+        letter = line[0]
+        dict_count[letter] = dict_count.get(letter, 0) + 1
+    list_count = [(k, v) for k, v in dict_count.items()]
+
+    return list_count
 
 
 def pregunta_03():
@@ -57,7 +81,16 @@ def pregunta_03():
     ]
 
     """
-    return
+    data = load_data("data.csv")
+
+    letters = sorted(list(set([line[0] for line in data])))
+    dict_count = {letter: 0 for letter in letters}
+    for line in data:
+        letter = line[0]
+        val = int(line[1])
+        dict_count[letter] = dict_count.get(letter, 0) + val
+    list_count = [(k, v) for k, v in dict_count.items()]
+    return list_count
 
 
 def pregunta_04():
@@ -82,7 +115,13 @@ def pregunta_04():
     ]
 
     """
-    return
+    data = load_data("data.csv")
+    dict_count = {}
+    for line in data:
+        month = line[2].split("-")[1]
+        dict_count[month] = dict_count.get(month, 0) + 1
+    list_count = sorted([(k, v) for k, v in dict_count.items()])
+    return list_count
 
 
 def pregunta_05():
@@ -100,7 +139,21 @@ def pregunta_05():
     ]
 
     """
-    return
+    data = load_data("data.csv")
+
+    letters = sorted(list(set([line[0] for line in data])))
+    dict_count = {letter: [0, 10] for letter in letters}
+    for line in data:
+        letter = line[0]
+        val = int(line[1])
+        max_, min_ = dict_count[letter]
+        if val > max_:
+            dict_count[letter][0] = val
+        if val < min_:
+            dict_count[letter][1] = val
+
+    list_count = [(k, *tuple(v)) for k, v in dict_count.items()]
+    return list_count
 
 
 def pregunta_06():
@@ -125,7 +178,25 @@ def pregunta_06():
     ]
 
     """
-    return
+    data = load_data("data.csv")
+
+    dict_count = {}
+    for line in data:
+        dict_ = {
+            string.split(":")[0]: string.split(":")[1] for string in line[4].split(",")
+        }
+        for k, v in dict_.items():
+            v = int(v)
+            if k in dict_count:
+                min_, max_ = dict_count[k]
+                if v > max_:
+                    dict_count[k][1] = v
+                if v < min_:
+                    dict_count[k][0] = v
+            else:
+                dict_count[k] = [v, v]
+    list_count = sorted([(k, *tuple(v)) for k, v in dict_count.items()])
+    return list_count
 
 
 def pregunta_07():
@@ -149,7 +220,20 @@ def pregunta_07():
     ]
 
     """
-    return
+    data = load_data("data.csv")
+
+    dict_count = {}
+    for line in data:
+        letter = line[0]
+        val = int(line[1])
+
+        if val in dict_count:
+            dict_count[val].append(letter)
+        else:
+            dict_count[val] = [letter]
+    list_count = sorted([(k, v) for k, v in dict_count.items()])
+
+    return list_count
 
 
 def pregunta_08():
@@ -174,7 +258,10 @@ def pregunta_08():
     ]
 
     """
-    return
+
+    list_count = pregunta_07()
+
+    return [(t[0], sorted(list(dict.fromkeys(t[1])))) for t in list_count]
 
 
 def pregunta_09():
@@ -197,7 +284,17 @@ def pregunta_09():
     }
 
     """
-    return
+    data = load_data("data.csv")
+
+    dict_count = {}
+    for line in data:
+        dict_ = {
+            string.split(":")[0]: string.split(":")[1] for string in line[4].split(",")
+        }
+        for k, v in dict_.items():
+            dict_count[k] = dict_count.get(k, 0) + 1
+    dict_count = {k: v for k, v in sorted(dict_count.items(), key=lambda item: item[0])}
+    return dict_count
 
 
 def pregunta_10():
@@ -218,7 +315,22 @@ def pregunta_10():
 
 
     """
-    return
+    data = load_data("data.csv")
+
+    letters = sorted(list(set([line[0] for line in data])))
+
+    list_ = []
+    for line in data:
+        letter = line[0]
+        elements_4 = len(line[3].split(","))
+        elements_5 = len(
+            {
+                string.split(":")[0]: string.split(":")[1]
+                for string in line[4].split(",")
+            }
+        )
+        list_.append((letter, elements_4, elements_5))
+    return list_
 
 
 def pregunta_11():
@@ -239,7 +351,17 @@ def pregunta_11():
 
 
     """
-    return
+    data = load_data("data.csv")
+
+    dict_count = {}
+    for line in data:
+        letters = line[3].split(",")
+        val = int(line[1])
+        for letter in letters:
+            dict_count[letter] = dict_count.get(letter, 0) + val
+    dict_count = {k: v for k, v in sorted(dict_count.items(), key=lambda item: item[0])}
+
+    return dict_count
 
 
 def pregunta_12():
@@ -257,4 +379,16 @@ def pregunta_12():
     }
 
     """
-    return
+    data = load_data("data.csv")
+
+    dict_count = {}
+    for line in data:
+        letter = line[0]
+        dict_ = {
+            string.split(":")[0]: string.split(":")[1] for string in line[4].split(",")
+        }
+        sum_vals = sum([int(v) for v in dict_.values()])
+
+        dict_count[letter] = dict_count.get(letter, 0) + sum_vals
+    dict_count = {k: v for k, v in sorted(dict_count.items(), key=lambda item: item[0])}
+    return dict_count
